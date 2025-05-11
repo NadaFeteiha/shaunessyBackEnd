@@ -1,14 +1,52 @@
-const express = require('express');
+import express from "express";
+import morgan from "morgan";
+import dotenv from "dotenv";
+import cors from "cors";
+import mongoose from "mongoose";
+import { handleErrors } from './utils/ErrorHandler.js';
+
+// Routers
+import schoolRouter from "./routes/school.routes.js";
+import faqRouter from './routes/faq.routes.js';
+
+
+dotenv.config();
+
+// Connect to MongoDB
+await mongoose
+    .connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 30000 })
+    .then(() => console.log(`Connected to MongoDB${process.env.MONGODB_URI}`))
+    .catch((e) => console.error(e))
+    .finally(() => console.log(`process.env.MONGODB_URI`));
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middlewares
+app.use(express.static("./public"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
+app.use(cors());
+app.use(handleErrors);
 
-// Example route
-app.get('/', (req, res) => {
-    res.send('Hello from Node.js backend!');
+// Routes
+app.get("/", (req, res) => {
+    res.render("index");
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+// API Routes
+app.use("/api/schools", schoolRouter);
+app.use("/api/faqs", faqRouter);
+
+// Global error handling
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(err.status || 500).json({
+        status: "error",
+        message: err.message || "Internal Server Error",
+    });
+}
+);
+
+app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
