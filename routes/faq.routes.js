@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { FAQ } from '../models/FAQ.model.js';
-import { validateId, validateFAQ } from '../middleware/validate.js';
+import { validateId, validateFAQ, protect, authorize } from '../middleware/validate.js';
 import { ResponseHandler } from '../utils/ResponseHandler.js';
 
 const FAQRouter = Router();
@@ -33,7 +33,7 @@ FAQRouter.get('/', async (req, res) => {
   * @route POST /api/faqs
   * @desc Create a new FAQ
  */
-FAQRouter.post('/', validateFAQ, async (req, res) => {
+FAQRouter.post('/', protect, authorize('admin'), validateFAQ, async (req, res) => {
     try {
         const faq = new FAQ(req.body);
         await faq.save();
@@ -52,7 +52,7 @@ FAQRouter.post('/', validateFAQ, async (req, res) => {
  * @route GET /api/faqs/:id
  * @desc Get a single FAQ by ID
  * */
-FAQRouter.patch('/:id', validateId, validateFAQ, async (req, res) => {
+FAQRouter.patch('/:id', protect, authorize('admin'), validateId, validateFAQ, async (req, res) => {
     try {
         const faq = await FAQ.findByIdAndUpdate(
             req.params.id,
@@ -78,7 +78,7 @@ FAQRouter.patch('/:id', validateId, validateFAQ, async (req, res) => {
  * @route DELETE /api/faqs/:id
  * @desc Delete a FAQ
  */
-FAQRouter.delete('/:id', validateId, async (req, res) => {
+FAQRouter.delete('/:id', protect, authorize('admin'), validateId, async (req, res) => {
     try {
         const faq = await FAQ.findByIdAndDelete(req.params.id);
         if (!faq) {

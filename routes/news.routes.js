@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { News } from '../models/News.model.js';
-import { validateNews, validateId } from '../middleware/validate.js';
+import { validateNews, validateId, protect, authorize } from '../middleware/validate.js';
 import { ResponseHandler } from '../utils/ResponseHandler.js';
 import { ErrorHandler } from '../utils/ErrorHandler.js';
 
@@ -62,7 +62,7 @@ newsRouter.get('/', async (req, res, next) => {
  * @route POST /api/news
  * @desc Create a new news item
  */
-newsRouter.post('/', validateNews, async (req, res, next) => {
+newsRouter.post('/', protect, authorize('admin'), validateNews, async (req, res, next) => {
     try {
         const newsItem = new News(req.body);
         await newsItem.save();
@@ -96,7 +96,7 @@ newsRouter.get('/:id', validateId, async (req, res, next) => {
  * @route PATCH /api/news/:id
  * @desc Update a news item
  */
-newsRouter.patch('/:id', validateId, validateNews, async (req, res, next) => {
+newsRouter.patch('/:id', protect, authorize('admin'), validateId, validateNews, async (req, res, next) => {
     try {
         const newsItem = await News.findByIdAndUpdate(
             req.params.id,
@@ -122,7 +122,7 @@ newsRouter.patch('/:id', validateId, validateNews, async (req, res, next) => {
  * @route DELETE /api/news/:id
  * @desc Delete a news item
  */
-newsRouter.delete('/:id', validateId, async (req, res, next) => {
+newsRouter.delete('/:id', protect, authorize('admin'), validateId, async (req, res, next) => {
     try {
         const newsItem = await News.findByIdAndDelete(req.params.id);
         if (!newsItem) {

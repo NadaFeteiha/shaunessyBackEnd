@@ -10,8 +10,11 @@ import schoolRouter from "./routes/school.routes.js";
 import faqRouter from './routes/faq.routes.js';
 import newsRouter from './routes/news.routes.js';
 import eventRouter from "./routes/events.routes.js";
+import authRouter from "./routes/auth.routes.js";
 
 dotenv.config();
+console.log('JWT Secret:', process.env.JWT_SECRET);
+console.log('JWT Expiration:', process.env.JWT_EXPIRE);
 
 // Connect to MongoDB
 await mongoose
@@ -41,6 +44,7 @@ app.use("/api/schools", schoolRouter);
 app.use("/api/faqs", faqRouter);
 app.use("/api/news", newsRouter);
 app.use("/api/events", eventRouter);
+app.use("/api/auth", authRouter);
 
 // Global error handling
 app.use((err, req, res, next) => {
