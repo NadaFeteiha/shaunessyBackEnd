@@ -8,7 +8,8 @@ import { handleErrors } from './utils/ErrorHandler.js';
 // Routers
 import schoolRouter from "./routes/school.routes.js";
 import faqRouter from './routes/faq.routes.js';
-
+import newsRouter from './routes/news.routes.js';
+import eventRouter from "./routes/events.routes.js";
 
 dotenv.config();
 
@@ -38,6 +39,8 @@ app.get("/", (req, res) => {
 // API Routes
 app.use("/api/schools", schoolRouter);
 app.use("/api/faqs", faqRouter);
+app.use("/api/news", newsRouter);
+app.use("/api/events", eventRouter);
 
 // Global error handling
 app.use((err, req, res, next) => {

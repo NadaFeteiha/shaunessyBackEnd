@@ -1,48 +1,85 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const EventSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true,
+            required: [true, 'Event name is required'],
             unique: true,
+            trim: true,
+            minlength: [5, 'Event name must be at least 5 characters'],
+            maxlength: [100, 'Event name cannot exceed 100 characters']
         },
         description: {
             type: String,
-            required: true,
+            required: [true, 'Description is required'],
+            minlength: [20, 'Description must be at least 20 characters'],
+            maxlength: [2000, 'Description cannot exceed 2000 characters']
         },
         date: {
             type: Date,
-            required: true,
+            required: [true, 'Event date is required']
         },
         location: {
             type: String,
-            required: true,
+            required: [true, 'Location is required'],
+            maxlength: [200, 'Location cannot exceed 200 characters']
         },
         type: {
             type: String,
             default: "Social",
+            enum: {
+                values: ['Social', 'Educational', 'Sports', 'Cultural', 'Business'],
+                message: 'Event type must be Social, Educational, Sports, Cultural, or Business'
+            }
         },
         startTime: {
             type: Date,
-            required: true,
+            required: [true, 'Start time is required']
         },
         endTime: {
             type: Date,
-            required: true,
+            required: [true, 'End time is required'],
+            validate: {
+                validator: function (endTime) {
+                    return endTime > this.startTime;
+                },
+                message: 'End time must be after start time'
+            }
         },
         repeat: {
             type: String,
             enum: ['none', 'weekly', 'monthly', 'yearly'],
-            default: 'none',
+            default: 'none'
         },
         repeatUntil: {
             type: Date,
             default: null,
+            validate: {
+                validator: function (repeatUntil) {
+                    if (this.repeat === 'none') return true;
+                    return repeatUntil > this.date;
+                },
+                message: 'Repeat until date must be after event date'
+            }
         }
     },
-    { timestamps: true }
+    {
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (doc, ret) => {
+                delete ret.__v;
+                return ret;
+            }
+        },
+        toObject: { virtuals: true }
+    }
 );
 
-const Event = mongoose.model("Event", EventSchema);
-export default Event;
+// Indexes
+EventSchema.index({ name: 'text', description: 'text' });
+EventSchema.index({ type: 1 });
+EventSchema.index({ date: 1, startTime: 1 });
+
+export const Event = mongoose.model('Event', EventSchema);

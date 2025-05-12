@@ -1,6 +1,8 @@
 import { schoolJoiSchema, idJoiSchema } from '../validators/school.validator.js';
 import { ResponseHandler } from '../utils/ResponseHandler.js';
 import { faqJoiSchema } from '../validators/faq.validator.js';
+import { newsJoiSchema } from '../validators/news.validator.js';
+import { eventJoiSchema } from '../validators/event.validator.js';
 
 export const validateSchool = async (req, res, next) => {
     const { error } = schoolJoiSchema.validate(req.body, {
@@ -38,6 +40,38 @@ export const validateFAQ = async (req, res, next) => {
             message: detail.message.replace(/['"]+/g, '')
         }));
         return ResponseHandler.error(res, errors);
+    }
+    next();
+};
+
+export const validateNews = async (req, res, next) => {
+    const { error } = newsJoiSchema.validate(req.body, {
+        abortEarly: false,
+        allowUnknown: false
+    });
+
+    if (error) {
+        const errors = error.details.map(detail => ({
+            field: detail.path[0],
+            message: detail.message.replace(/['"]+/g, '')
+        }));
+        return ResponseHandler.error(res, errors);
+    }
+    next();
+};
+
+export const validateEvent = async (req, res, next) => {
+    const { error } = eventJoiSchema.validate(req.body, {
+        abortEarly: false,
+        allowUnknown: false
+    });
+
+    if (error) {
+        const errors = error.details.map(detail => ({
+            field: detail.path[0],
+            message: detail.message.replace(/['"]+/g, '')
+        }));
+        return ResponseHandler.validationError(res, errors);
     }
     next();
 };
