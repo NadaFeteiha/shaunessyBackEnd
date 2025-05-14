@@ -15,12 +15,13 @@ import userRouter from "./routes/user.routes.js";
 
 
 dotenv.config();
-console.log('JWT Secret:', process.env.JWT_SECRET);
-console.log('JWT Expiration:', process.env.JWT_EXPIRE);
 
 // Connect to MongoDB
 await mongoose
-    .connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 30000 })
+    .connect(process.env.MONGODB_URI, {
+        serverSelectionTimeoutMS: 30000,
+        socketTimeoutMS: 45000,
+    })
     .then(() => console.log(`Connected to MongoDB${process.env.MONGODB_URI}`))
     .catch((e) => console.error(e))
     .finally(() => console.log(`process.env.MONGODB_URI`));
