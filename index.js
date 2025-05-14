@@ -40,9 +40,12 @@ app.use(cors({
 }));
 app.use(handleErrors);
 
+app.set('view engine', 'ejs');
+app.set('views', './views'); // Ensure you have a 'views' folder
+
 // Routes
 app.get("/", (req, res) => {
-    res.render("index");
+    res.sendFile(__dirname + "/public/index.html");
 });
 
 // API Routes
