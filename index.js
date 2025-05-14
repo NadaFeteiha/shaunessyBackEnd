@@ -34,7 +34,10 @@ app.use(express.static("./public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use(cors());
+app.use(cors({
+    origin: 'https://shaunessycommunity.netlify.app', //'http://localhost:5173', // Your frontend URL
+    credentials: true, // Required for cookies/auth
+}));
 app.use(handleErrors);
 
 app.set('view engine', 'ejs');
