@@ -11,6 +11,8 @@ import faqRouter from './routes/faq.routes.js';
 import newsRouter from './routes/news.routes.js';
 import eventRouter from "./routes/events.routes.js";
 import authRouter from "./routes/auth.routes.js";
+import userRouter from "./routes/user.routes.js";
+
 
 dotenv.config();
 console.log('JWT Secret:', process.env.JWT_SECRET);
@@ -32,7 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors({
-    origin: 'http://localhost:5174', // Your frontend URL
+    origin: 'http://localhost:5173', // Your frontend URL
     credentials: true, // Required for cookies/auth
     exposedHeaders: ['set-cookie'] // Needed for cookie headers
 }));
@@ -49,6 +51,7 @@ app.use("/api/faqs", faqRouter);
 app.use("/api/news", newsRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 
 // Global error handling
 app.use((err, req, res, next) => {

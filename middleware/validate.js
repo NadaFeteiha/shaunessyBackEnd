@@ -102,7 +102,7 @@ export const validateEvent = async (req, res, next) => {
             field: detail.path[0],
             message: detail.message.replace(/['"]+/g, '')
         }));
-        return ResponseHandler.validationError(res, errors);
+        return ResponseHandler.error(res, errors);
     }
     next();
 };

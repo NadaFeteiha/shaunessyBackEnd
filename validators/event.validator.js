@@ -1,12 +1,12 @@
 import Joi from 'joi';
 
 export const eventJoiSchema = Joi.object({
-    name: Joi.string()
+    title: Joi.string()
         .min(5).max(100).required()
         .messages({
-            'string.empty': 'Event name is required',
-            'string.min': 'Event name must be at least 5 characters',
-            'string.max': 'Event name cannot exceed 100 characters'
+            'string.empty': 'Event title is required',
+            'string.min': 'Event title must be at least 5 characters',
+            'string.max': 'Event title cannot exceed 100 characters'
         }),
 
     description: Joi.string()

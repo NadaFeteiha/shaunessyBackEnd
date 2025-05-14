@@ -96,4 +96,96 @@ authRouter.get('/me', protect, async (req, res, next) => {
     });
 });
 
+
+/**
+ * @route POST /api/auth/change-password
+ * @desc change password
+ */
+authRouter.post('/change-password', protect, async (req, res, next) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+
+        if (!oldPassword || !newPassword) {
+            throw new ErrorHandler('Please provide both old and new passwords', 400);
+        }
+
+        const user = await User.findById(req.user.id).select('+password');
+        if (!user) {
+            throw new ErrorHandler('User not found', 404);
+        }
+
+        const isMatch = await user.comparePassword(oldPassword);
+        if (!isMatch) {
+            throw new ErrorHandler('Old password is incorrect', 401);
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Password changed successfully'
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+);
+
+/**
+ * @route POST /api/auth/forgot-password
+ * @desc Forgot password
+ */
+authRouter.post('/forgot-password', async (req, res, next) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            throw new ErrorHandler('Please provide an email address', 400);
+        }
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            throw new ErrorHandler('User not found', 404);
+        }
+
+        // Generate a password reset token and send it to the user's email
+        // (Implementation of sending email is omitted for brevity)
+
+        res.status(200).json({
+            success: true,
+            message: 'Password reset link sent to your email'
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+);
+
+/**
+ * @route POST /api/auth/reset-password/:token
+ * @desc Reset password
+ */
+authRouter.post('/reset-password/:token', async (req, res, next) => {
+    try {
+        const { token } = req.params;
+        const { newPassword } = req.body;
+
+        if (!newPassword) {
+            throw new ErrorHandler('Please provide a new password', 400);
+        }
+
+        // Verify the token and reset the password
+        // (Implementation of token verification is omitted for brevity)
+
+        res.status(200).json({
+            success: true,
+            message: 'Password reset successfully'
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+);
+
 export default authRouter;

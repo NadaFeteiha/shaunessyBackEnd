@@ -1,3 +1,5 @@
+import { ResponseHandler } from './ResponseHandler.js';
+
 export class ErrorHandler extends Error {
     constructor(message, statusCode, errors = []) {
         super(message);
@@ -9,7 +11,6 @@ export class ErrorHandler extends Error {
 }
 
 export const handleErrors = (err, req, res, next) => {
-    // Log detailed error in development
     if (process.env.NODE_ENV === 'development') {
         console.error('ERROR 💥', {
             message: err.message,
@@ -25,7 +26,7 @@ export const handleErrors = (err, req, res, next) => {
             field: detail.path.join('.'),
             message: detail.message
         }));
-        return ResponseHandler.validationError(res, errors);
+        return ResponseHandler.error(res, errors);
     }
 
     // Handle Mongoose validation errors
@@ -34,23 +35,23 @@ export const handleErrors = (err, req, res, next) => {
             field: e.path,
             message: e.message
         }));
-        return ResponseHandler.validationError(res, errors);
+        return ResponseHandler.error(res, errors);
     }
 
     // Handle duplicate key errors
     if (err.code === 11000) {
         const field = Object.keys(err.keyPattern)[0];
-        return ResponseHandler.conflict(res, `${field} already exists`);
+        return ResponseHandler.error(res, `${field} already exists`);
     }
 
     // Handle invalid ObjectId
     if (err.name === 'CastError') {
-        return ResponseHandler.clientError(res, 'Invalid resource ID', 400);
+        return ResponseHandler.error(res, 'Invalid resource ID', 400);
     }
 
     // Handle operational errors
     if (err.isOperational) {
-        return ResponseHandler.clientError(
+        return ResponseHandler.error(
             res,
             err.message,
             err.statusCode,
@@ -59,5 +60,5 @@ export const handleErrors = (err, req, res, next) => {
     }
 
     // Unknown/generic errors
-    c.serverError(res, 'Something went wrong', 500, err);
+    ResponseHandler.error(res, 'Something went wrong', 500, err);
 };

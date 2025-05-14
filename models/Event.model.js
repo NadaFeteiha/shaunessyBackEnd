@@ -2,13 +2,13 @@ import mongoose from 'mongoose';
 
 const EventSchema = new mongoose.Schema(
     {
-        name: {
+        title: {
             type: String,
-            required: [true, 'Event name is required'],
+            required: [true, 'Event title is required'],
             unique: true,
             trim: true,
-            minlength: [5, 'Event name must be at least 5 characters'],
-            maxlength: [100, 'Event name cannot exceed 100 characters']
+            minlength: [5, 'Event title must be at least 5 characters'],
+            maxlength: [100, 'Event title cannot exceed 100 characters']
         },
         description: {
             type: String,
@@ -78,8 +78,6 @@ const EventSchema = new mongoose.Schema(
 );
 
 // Indexes
-EventSchema.index({ name: 'text', description: 'text' });
-EventSchema.index({ type: 1 });
 EventSchema.index({ date: 1, startTime: 1 });
 
 export const Event = mongoose.model('Event', EventSchema);
