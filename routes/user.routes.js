@@ -53,5 +53,4 @@ userRouter.post('/:id', protect, async (req, res, next) => {
 );
 
 
-
 export default userRouter;

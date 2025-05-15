@@ -12,7 +12,7 @@ import newsRouter from './routes/news.routes.js';
 import eventRouter from "./routes/events.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
-
+import HOARouter from "./routes/hoa.routes.js";
 
 dotenv.config();
 
@@ -35,8 +35,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors({
-    origin: 'https://shaunessycommunity.netlify.app', //'http://localhost:5173', // Your frontend URL
-    credentials: true, // Required for cookies/auth
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
 }));
 app.use(handleErrors);
 
@@ -55,6 +55,7 @@ app.use("/api/news", newsRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/hoa", HOARouter);
 
 // Global error handling
 app.use((err, req, res, next) => {
