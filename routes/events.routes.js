@@ -33,7 +33,7 @@ eventRouter.get('/', async (req, res, next) => {
  * @route POST /api/events
  * @desc Create a new event
  */
-eventRouter.post('/', protect, authorize('admin'), validateEvent, async (req, res, next) => {
+eventRouter.post('/', protect, authorize('admin', 'moderator'), validateEvent, async (req, res, next) => {
     try {
         const event = new Event(req.body);
         await event.save();
@@ -67,7 +67,7 @@ eventRouter.get('/:id', validateId, async (req, res, next) => {
  * @route PATCH /api/events/:id
  * @desc Update an event
  */
-eventRouter.patch('/:id', protect, authorize('admin'), validateId, validateEvent, async (req, res, next) => {
+eventRouter.patch('/:id', protect, authorize('admin', 'moderator'), validateId, validateEvent, async (req, res, next) => {
     try {
         const event = await Event.findByIdAndUpdate(
             req.params.id,
@@ -93,7 +93,7 @@ eventRouter.patch('/:id', protect, authorize('admin'), validateId, validateEvent
  * @route DELETE /api/events/:id
  * @desc Delete an event
  */
-eventRouter.delete('/:id', protect, authorize('admin'), validateId, async (req, res, next) => {
+eventRouter.delete('/:id', protect, authorize('admin', 'moderator'), validateId, async (req, res, next) => {
     try {
         const event = await Event.findByIdAndDelete(req.params.id);
         if (!event) {

@@ -2,10 +2,10 @@ import Joi from 'joi';
 
 export const newsJoiSchema = Joi.object({
     title: Joi.string()
-        .min(10).max(200).required()
+        .min(4).max(200).required()
         .messages({
             'string.empty': 'Title is required',
-            'string.min': 'Title must be at least 10 characters',
+            'string.min': 'Title must be at least 5 characters',
             'string.max': 'Title cannot exceed 200 characters'
         }),
 
@@ -18,7 +18,6 @@ export const newsJoiSchema = Joi.object({
         }),
 
     image: Joi.string()
-        .uri()
         .allow('')
         .optional(),
 

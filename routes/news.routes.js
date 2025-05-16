@@ -62,7 +62,7 @@ newsRouter.get('/', async (req, res, next) => {
  * @route POST /api/news
  * @desc Create a new news item
  */
-newsRouter.post('/', protect, authorize('admin'), validateNews, async (req, res, next) => {
+newsRouter.post('/', protect, authorize('admin', 'moderator'), validateNews, async (req, res, next) => {
     try {
         const newsItem = new News(req.body);
         await newsItem.save();
@@ -96,8 +96,9 @@ newsRouter.get('/:id', validateId, async (req, res, next) => {
  * @route PATCH /api/news/:id
  * @desc Update a news item
  */
-newsRouter.patch('/:id', protect, authorize('admin'), validateId, validateNews, async (req, res, next) => {
+newsRouter.patch('/:id', protect, authorize('admin', 'moderator'), validateId, validateNews, async (req, res, next) => {
     try {
+        console.log("*************** Patch",req.body);
         const newsItem = await News.findByIdAndUpdate(
             req.params.id,
             req.body,
@@ -108,6 +109,7 @@ newsRouter.patch('/:id', protect, authorize('admin'), validateId, validateNews, 
             throw new ErrorHandler('News item not found', 404);
         }
 
+        console.log("new =======>", newsItem);
         ResponseHandler.success(res, newsItem, 'News item updated successfully');
     } catch (err) {
         if (err.code === 11000) {
@@ -122,7 +124,7 @@ newsRouter.patch('/:id', protect, authorize('admin'), validateId, validateNews, 
  * @route DELETE /api/news/:id
  * @desc Delete a news item
  */
-newsRouter.delete('/:id', protect, authorize('admin'), validateId, async (req, res, next) => {
+newsRouter.delete('/:id', protect, authorize('admin', 'moderator'), validateId, async (req, res, next) => {
     try {
         const newsItem = await News.findByIdAndDelete(req.params.id);
         if (!newsItem) {

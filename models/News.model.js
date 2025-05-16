@@ -7,7 +7,7 @@ const NewsSchema = new mongoose.Schema(
             required: [true, 'Title is required'],
             unique: true,
             trim: true,
-            minlength: [10, 'Title must be at least 10 characters'],
+            minlength: [4, 'Title must be at least 5 characters'],
             maxlength: [200, 'Title cannot exceed 200 characters']
         },
         description: {
@@ -18,13 +18,7 @@ const NewsSchema = new mongoose.Schema(
         },
         image: {
             type: String,
-            validate: {
-                validator: (v) => {
-                    if (!v) return true; // Optional field
-                    return /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(v);
-                },
-                message: 'Invalid image URL format'
-            }
+            required: [true, 'Image URL is required'],
         },
         date: {
             type: Date,
