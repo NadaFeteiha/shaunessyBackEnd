@@ -40,6 +40,9 @@ app.use(cors({
 }));
 app.use(handleErrors);
 
+
+
+
 app.set('view engine', 'ejs');
 app.set('views', './views'); // Ensure you have a 'views' folder
 

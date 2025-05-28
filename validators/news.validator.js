@@ -21,6 +21,10 @@ export const newsJoiSchema = Joi.object({
         .allow('')
         .optional(),
 
+    link: Joi.string()
+        .allow('')
+        .optional(),
+
     type: Joi.string().required()
         .messages({
             'any.only': 'Type must be either "news" or "event"'

@@ -29,6 +29,10 @@ const NewsSchema = new mongoose.Schema(
             required: [true, 'Type is required'],
             minlength: [4, 'Type must be at least 4 characters'],
             maxlength: [50, 'Type cannot exceed 50 characters'],
+        },
+        link: {
+            type: String,
+            required: [false, 'Link is required'],
         }
     },
     {
@@ -45,7 +49,6 @@ const NewsSchema = new mongoose.Schema(
 );
 
 // Indexes
-NewsSchema.index({ title: 'text', description: 'text' });
 NewsSchema.index({ date: -1 });
 
 export const News = mongoose.model('News', NewsSchema);

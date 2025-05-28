@@ -1,8 +1,6 @@
 import express from 'express';
-import jwt from 'jsonwebtoken';
 import { HOA } from '../models/HOA.model.js';
 import { protect } from '../middleware/validate.js';
-import { ErrorHandler } from '../utils/ErrorHandler.js';
 
 
 const HOARouter = express.Router();
