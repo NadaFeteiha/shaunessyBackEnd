@@ -1,8 +1,8 @@
 import express from 'express';
 import { Issue } from '../models/issues.model.js';
-import { issueSchema } from '../validators/issue.validator.js';
 import { ErrorHandler } from '../utils/ErrorHandler.js';
 import { validateId, validateIssue, protect } from '../middleware/validate.js';
+import { ResponseHandler } from '../utils/ResponseHandler.js';
 
 const issueRouter = express.Router();
 
@@ -10,7 +10,7 @@ const issueRouter = express.Router();
 issueRouter.get('/', async (req, res, next) => {
     try {
         const issues = await Issue.find();
-        res.status(200).json({ success: true, data: issues });
+        ResponseHandler.success(res, issues);
     } catch (err) {
         next(err);
     }
@@ -32,13 +32,16 @@ issueRouter.post('/', protect, validateIssue, async (req, res, next) => {
 });
 
 // Delete an issue by id
-issueRouter.delete('/:id', protect, async (req, res, next) => {
+issueRouter.delete('/:id', protect, validateId, async (req, res) => {
     try {
-        const deleted = await Issue.findOneAndDelete({ id: req.params.id });
-        if (!deleted) throw new ErrorHandler('Issue not found', 404);
-        res.status(200).json({ success: true, message: 'Issue deleted' });
+        const deleted = await Issue.findByIdAndDelete(req.params.id);
+
+        if (!deleted) {
+            return ResponseHandler.notFound(res, 'Issue not found');
+        }
+        ResponseHandler.success(res, null, 'Issue deleted successfully');
     } catch (err) {
-        next(err);
+        ResponseHandler.serverError(res, 'Failed to delete Issue', err);
     }
 });
 
