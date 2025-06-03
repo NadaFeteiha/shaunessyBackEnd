@@ -18,13 +18,13 @@ issueRouter.get('/', async (req, res, next) => {
 
 issueRouter.post('/', protect, validateIssue, async (req, res, next) => {
     try {
-        const { id, title, description } = req.body;
+        const { title, description } = req.body;
 
-        // Check for duplicate title or id
-        const existing = await Issue.findOne({ $or: [{ id }, { title }] });
-        if (existing) throw new ErrorHandler('Issue with this ID or Title already exists', 409);
+        // Check for duplicate title
+        const existing = await Issue.findOne({ title });
+        if (existing) throw new ErrorHandler('Issue with this Title already exists', 409);
 
-        const issue = await Issue.create({ id, title, description });
+        const issue = await Issue.create({ title, description });
         res.status(201).json({ success: true, data: issue });
     } catch (err) {
         next(err);
