@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { FAQ } from '../models/FAQ.model.js';
-import { validateId, validateFAQ, protect, authorize } from '../middleware/validate.js';
+import { validateId, validateFAQ, protect } from '../middleware/validate.js';
 import { ResponseHandler } from '../utils/ResponseHandler.js';
 
 const FAQRouter = Router();
@@ -54,7 +54,7 @@ FAQRouter.post('/', protect, validateFAQ, async (req, res) => {
  * @route DELETE /api/faqs/:id
  * @desc Delete a FAQ
  */
-FAQRouter.delete('/:id', protect, authorize('admin'), validateId, async (req, res) => {
+FAQRouter.delete('/:id', protect, validateId, async (req, res) => {
     try {
         const faq = await FAQ.findByIdAndDelete(req.params.id);
         if (!faq) {

@@ -13,6 +13,7 @@ import eventRouter from "./routes/events.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
 import HOARouter from "./routes/hoa.routes.js";
+import issueRouter from "./routes/issue.routes.js";
 
 dotenv.config();
 
@@ -59,6 +60,7 @@ app.use("/api/events", eventRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/hoa", HOARouter);
+app.use("/api/issues", issueRouter);
 
 // Global error handling
 app.use((err, req, res, next) => {
