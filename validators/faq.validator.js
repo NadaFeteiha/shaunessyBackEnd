@@ -2,10 +2,10 @@ import Joi from 'joi';
 
 export const faqJoiSchema = Joi.object({
     question: Joi.string()
-        .min(10).max(500).required()
+        .min(5).max(500).required()
         .messages({
             'string.empty': 'Question is required',
-            'string.min': 'Question must be at least 10 characters',
+            'string.min': 'Question must be at least 5 characters',
             'string.max': 'Question cannot exceed 500 characters'
         }),
 
@@ -18,9 +18,9 @@ export const faqJoiSchema = Joi.object({
         }),
 
     category: Joi.string()
-        .valid('general', 'technical', 'account', 'billing', 'other').required()
+        .required()
         .messages({
-            'any.only': 'Category must be general, technical, account, billing, or other'
+            'any.only': 'Category not allowed'
         })
 });
 

@@ -33,10 +33,12 @@ FAQRouter.get('/', async (req, res) => {
   * @route POST /api/faqs
   * @desc Create a new FAQ
  */
-FAQRouter.post('/', protect, authorize('admin'), validateFAQ, async (req, res) => {
+FAQRouter.post('/', protect, validateFAQ, async (req, res) => {
     try {
+        console.log('Creating FAQ with data:', req.body);
         const faq = new FAQ(req.body);
         await faq.save();
+        console.log('FAQ created successfully:', faq);
         ResponseHandler.success(res, faq, 'FAQ created successfully', 201);
     } catch (err) {
         if (err.code === 11000) {
@@ -47,32 +49,6 @@ FAQRouter.post('/', protect, authorize('admin'), validateFAQ, async (req, res) =
     }
 });
 
-
-/**
- * @route GET /api/faqs/:id
- * @desc Get a single FAQ by ID
- * */
-FAQRouter.patch('/:id', protect, authorize('admin'), validateId, validateFAQ, async (req, res) => {
-    try {
-        const faq = await FAQ.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true }
-        );
-
-        if (!faq) {
-            return ResponseHandler.notFound(res, 'FAQ not found');
-        }
-
-        ResponseHandler.success(res, faq, 'FAQ updated successfully');
-    } catch (err) {
-        if (err.code === 11000) {
-            ResponseHandler.conflict(res, 'This question already exists');
-        } else {
-            ResponseHandler.serverError(res, 'Failed to update FAQ', err);
-        }
-    }
-});
 
 /**
  * @route DELETE /api/faqs/:id

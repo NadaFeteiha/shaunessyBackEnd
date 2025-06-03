@@ -7,7 +7,7 @@ const FAQSchema = new mongoose.Schema(
             required: [true, 'Question is required'],
             unique: true,
             trim: true,
-            minlength: [10, 'Question must be at least 10 characters'],
+            minlength: [5, 'Question must be at least 5 characters'],
             maxlength: [500, 'Question cannot exceed 500 characters']
         },
         answer: {
@@ -20,8 +20,8 @@ const FAQSchema = new mongoose.Schema(
             type: String,
             required: [true, 'Category is required'],
             enum: {
-                values: ['general', 'technical', 'account', 'billing', 'other'],
-                message: 'Category must be general, technical, account, billing, or other'
+                values: ['Community Guidelines', 'Financial Information', 'Community Services', 'Environmental Protection', 'Other'],
+                message: 'Category not allowed'
             },
             index: true
         }
