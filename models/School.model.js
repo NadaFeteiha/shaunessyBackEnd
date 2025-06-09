@@ -91,6 +91,5 @@ SchoolSchema.pre('save', function (next) {
     next();
 });
 
-SchoolSchema.index({ name: 1 });
 
 export const School = mongoose.model('School', SchoolSchema);
