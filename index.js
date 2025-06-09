@@ -14,6 +14,7 @@ import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
 import HOARouter from "./routes/hoa.routes.js";
 import issueRouter from "./routes/issue.routes.js";
+import linkRouter from "./routes/link.routes.js";
 
 dotenv.config();
 
@@ -42,8 +43,6 @@ app.use(cors({
 app.use(handleErrors);
 
 
-
-
 app.set('view engine', 'ejs');
 app.set('views', './views'); // Ensure you have a 'views' folder
 
@@ -61,6 +60,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/hoa", HOARouter);
 app.use("/api/issues", issueRouter);
+app.use("/api/links", linkRouter);
 
 // Global error handling
 app.use((err, req, res, next) => {
